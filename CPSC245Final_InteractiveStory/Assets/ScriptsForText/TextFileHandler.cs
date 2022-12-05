@@ -20,8 +20,8 @@ public class TextFileHandler : MonoBehaviour
         private string fullStringOfText;
         private List<string> allLinesOfText = new List<string>();
         private string branchFullString;
-        private List<string> allLinesOfBranches = new List<string>();
-        private string choiceButtonText;
+        protected List<string> allLinesOfBranches = new List<string>();
+        protected string choiceButtonText;
         public UnityEvent onChoicePrompted;
         public UnityEvent onSwitchToMainText;
 
@@ -99,15 +99,6 @@ public class TextFileHandler : MonoBehaviour
                     indexForListOfLines);
             return line;
         }
-        
-        // returns a string after checking it for indicators for character names and the start or end of a branch
-        private string CheckDetailsForBranches()
-        {
-            string line =
-                CheckForCharacterNames(
-                    CheckForStartOfBranch(CheckForEndOfBranch(allLinesOfBranches[indexForListOfBranchLines])), indexForListOfBranchLines);
-            return line;
-        }
 
         //checks the start of every line of text for the indicator for character names, //
         private string CheckForCharacterNames(string line, int lineIndex)
@@ -137,9 +128,18 @@ public class TextFileHandler : MonoBehaviour
             }
             return line;
         }
+        
+        // returns a string after checking it for indicators for character names and the start or end of a branch
+        private string CheckDetailsForBranches()
+        {
+            string line =
+                CheckForCharacterNames(
+                    CheckForStartOfBranch(CheckForEndOfBranch(allLinesOfBranches[indexForListOfBranchLines])), indexForListOfBranchLines);
+            return line;
+        }
     
         //checks for the indicator for the start of a branch, aka the choice option that would go in a button, ::
-        private string CheckForStartOfBranch(string line)
+        protected string CheckForStartOfBranch(string line)
         {
             if (line.StartsWith("::"))
             {
@@ -150,7 +150,7 @@ public class TextFileHandler : MonoBehaviour
         }
 
         //checks for the indicator for the end of the branch and switches back to the main text file, ;;
-        private string CheckForEndOfBranch(string line)
+        protected string CheckForEndOfBranch(string line)
         {
             if (line.StartsWith(";;"))
             {
@@ -165,4 +165,5 @@ public class TextFileHandler : MonoBehaviour
         {
             choiceButtonText = line;
         }
+        //need another one of these methods for the second button^
     }

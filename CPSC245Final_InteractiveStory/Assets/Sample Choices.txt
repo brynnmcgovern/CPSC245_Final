@@ -1,7 +1,11 @@
 ::1::Respond like a jerk
-Sandie didn't know what this weird grandpa of a dog was talking about.
-;;She turned her head away from the other dog in pure annoyance.
+1Sandie didn't know what this weird grandpa of a dog was talking about.
+1;;She turned her head away from the other dog in pure annoyance.
 ::1::Respond like a hopeful protagonist
-Sandie liked the sound of an adventure!
+1Sandie liked the sound of an adventure!
 ;;She wagged her tail to show her pure excitement.
+::2::Be happy about the sword
+2;;Sandie hadn't really been listening to anything the old dog said, but she did like swords.
+::2::Be upset about the sword
+2;;Sandie did not trust the old dog with such a sharp, dangerous sword around her.
 
