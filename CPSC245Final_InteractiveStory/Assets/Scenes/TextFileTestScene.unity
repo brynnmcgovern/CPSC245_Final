@@ -1391,7 +1391,6 @@ MonoBehaviour:
   branchTextFile: {fileID: 4900000, guid: c1570ef6c4e620348b0c545da73bd207, type: 3}
   indexForListOfLines: -1
   indexForListOfBranchLines: 0
-  indexForNextLine: 0
   onChoicePrompted:
     m_PersistentCalls:
       m_Calls:

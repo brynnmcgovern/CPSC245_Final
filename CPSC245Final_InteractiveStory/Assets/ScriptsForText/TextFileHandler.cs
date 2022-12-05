@@ -18,9 +18,9 @@ public class TextFileHandler : MonoBehaviour
         [HideInInspector] public int indexForListOfLines = -1;
         [HideInInspector] public int indexForListOfBranchLines = 0;
         private string fullStringOfText;
-        private List<string> allLinesOfText;
+        private List<string> allLinesOfText = new List<string>();
         private string branchFullString;
-        private List<string> allLinesOfBranches;
+        private List<string> allLinesOfBranches = new List<string>();
         private string choiceButtonText;
         public UnityEvent onChoicePrompted;
         public UnityEvent onSwitchToMainText;
@@ -63,10 +63,10 @@ public class TextFileHandler : MonoBehaviour
         }
         
         //Gets the contents of a text file and returns it as a string
-        private string GetTextFileAsString(TextAsset file, string fullString)
+        private string GetTextFileAsString(TextAsset file, string text)
         {
-            fullString = file.ToString();
-            return fullString;
+            text = file.ToString();
+            return text;
         }
 
         //reads through every line of a string and adds them individually to a list using the StringReader class
