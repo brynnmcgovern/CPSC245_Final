@@ -1,0 +1,40 @@
+Sandie woke up one morning in a mysterious forest.
+Standing above her was an elderly dog with long fur dangling from its face like a beard.
+The old dog said, "Young one, there is a grand adventure ahead of you!"
+*Sandie contemplated the old dog's words.
+The elderly dog briefly acknowledged Sandie's response and continued on.
+//Elderly Dog//"The world is in danger, and you are the only one who can save it."
+//Elderly Dog//"But it's dangerous to go alone! Take this."
+The elderly dog digs up a sword from beneath a nearby pile of leaves.
+*&Sandie stared at the sword.
+The old dog looked at Sandie, trying to gauge her thoughts.
+The elderly dog pushed the sword across the forest floor towards Sandie.
+Sandie immediately took the sword in her jaws and raised her head high.
+*It wasn't as cool as when humans did it because the sword was sticking out sideways, not upwards.
+Sandie gave the sword a few practice swings, nearly dropping it into the dirt.
+The elderly dog retreated into the forest after Sandie's sword swung far too close for comfort.
+And so, Sandie's epic journey began.
+//Sandie//"Woof!"
+::1Respond like a jerk
+#1Sandie didn't know what this weird grandpa of a dog was talking about.
+#1She turned her head away from the other dog in pure annoyance.
+#1Tester line
+#1;;Fourth Line
+::2Respond like a hopeful protagonist
+#2Sandie liked the sound of an adventure!
+#2She wagged her tail to show her pure excitement.
+#2Tester line
+#2;;Fourth Line
+::1Be happy about the sword
+#1Sandie didn't really understand what the old dog was saying, but she did like swords.
+#1;;She was so excited about the sword that she considered stealing it if he didn't hand it over.
+::2Be upset about the sword
+#2Sandie did not trust the old dog with such a sharp, dangerous sword around her.
+#2She quickly ran through all of her years of self-defense training in her mind. Just in case.
+#2;;If the old dog struck at her, she'd be ready.
+::1Be embarrassed
+#1Sandie was a little bummed that she didn't feel as cool as the humans looked in the movies.
+#1;;But it was too late to drop the sword now. That would be even more embarrassing.
+::2Be unbothered
+#2Sandie was pleased nonetheless and tried to hold the sword as high as she could.
+#2;;A sword is a sword after all.
