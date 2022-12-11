@@ -7,8 +7,6 @@ using Unity.VisualScripting;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-//timed choices
-//pub/sub call left button function
 public class Dialogue : MonoBehaviour
 {
     public TextAsset textFile;
@@ -28,7 +26,8 @@ public class Dialogue : MonoBehaviour
     public TextMeshProUGUI timerText;
 
     private int counter = 0;
-    private int branchCounter = 0;
+    private int branch1Counter = 0;
+    private int branch2Counter = 0;
     private int maxLines;
     private int choiceCounter = 0;
     private bool endOfBranch;
@@ -48,10 +47,8 @@ public class Dialogue : MonoBehaviour
 
     private Images images;
     
-    //make a method to check which button was pressed
-    //so on click it would return true
-    //check those methods in timer class
-    //move timer countdown to this class
+    //to signal an image change, place @ symbol at front of line, before *, &, //, 
+    // and ;;. But put it after #1 and ::1 (the symbols and numbers for choices and branches)
 
     // Start is called before the first frame update
     void Start()
@@ -61,11 +58,10 @@ public class Dialogue : MonoBehaviour
         nextButton.SetActive(true);
         leftButton.SetActive(false);
         rightButton.SetActive(false);
-        storyText.text = "Title Of Story";
+        storyText.enabled = false;
         images = GetComponent<Images>();
         timerText.enabled = false;
         leftOutline.enabled = false;
-        
 
         //hide choice buttons
         //set active next button
@@ -78,6 +74,48 @@ public class Dialogue : MonoBehaviour
         
     }
 
+    public void syncBranchCounters()
+    {
+        string temp;
+        if (branchNum == 2)
+        {
+            temp = branchOneStory[branch1Counter];
+            while (!temp.Contains(";;"))
+            {
+                temp = branchOneStory[branch1Counter];
+                branch1Counter++;
+                
+                if (temp.Contains(";;"))
+                {
+                    break;
+                }
+                //stop
+            }
+            
+            //search thru branch2 list for ;;
+            //increment branch2Counter
+        }
+        
+        else if (branchNum == 1)
+        {
+            temp = branchTwoStory[branch2Counter];
+            while (!temp.Contains(";;"))
+            {
+                temp = branchTwoStory[branch2Counter];
+                branch2Counter++;
+                
+                if (temp.Contains(";;"))
+                {
+                    break;
+                }
+                //break
+            }
+            
+            //search thru branch1 list for ;;
+            //increment branch1Counter
+        }
+    }
+    
     public void CheckIfRightButtonWasClicked()
     {
         rightButtonClicked = true;
@@ -130,23 +168,27 @@ public class Dialogue : MonoBehaviour
 
     public void Play()
     {
+        storyText.enabled = true;
         if (isFromMainStory == true)
         {
             switchMainStoryText();
-            images.NextImage();
+            CheckForEndOfStory();
+            
         }
         else if(isFromMainStory == false)
         {
             if (branchNum == 1)
             {
                 switchBranchOneText();
-                images.NextImage();
+                syncBranchCounters();
+                
             }
 
             if (branchNum == 2)
             {
                 switchBranchTwoText();
-                images.NextImage();
+                syncBranchCounters();
+                
             }
         }
     }
@@ -156,6 +198,7 @@ public class Dialogue : MonoBehaviour
         SeparateStringIntoLines(list, line);
         maxLines = temp.Count;
         SeparateLists();
+        maxLines = mainStory.Count;
     }
 
     public void GoBack()
@@ -173,10 +216,21 @@ public class Dialogue : MonoBehaviour
         }
         else
         {
-            branchCounter -= 1;
+            //branchCounter -= 1; fix this
+            counter -= 1;
         }
         
     }
+
+    public void CheckForEndOfStory()
+    {
+        if (counter == maxLines)
+        {
+            storyText.text = "End of Story";
+            nextButton.SetActive(false);
+        }
+    }
+    
     private void SeparateLists()
     {
 
@@ -230,12 +284,18 @@ public class Dialogue : MonoBehaviour
             backButton.SetActive(true);
             previousStoryText = mainStory[counter - 1];
         }
+        if (CheckForImageSwitch(line) == true)
+        {
+            line = line.TrimStart("@");
+            images.NextImage();
+        }
 
         if (line.StartsWith("//"))
         {
-             string[] namedDialogue = line.Split("//");
-             line = namedDialogue[1] + "\n" + namedDialogue[2];
+            line = line.TrimStart("//");
         }
+
+        
 
         if (CheckForChoice(line) == true)
         {
@@ -295,25 +355,31 @@ public class Dialogue : MonoBehaviour
         images.NextImage();
         
         string line;
-        line = branchOneStory[branchCounter];
+        line = branchOneStory[branch1Counter];
         line = line.TrimStart("1");
-        if (branchCounter != 0)
+        if (branch1Counter != 0)
         {
-            previousStoryText = branchOneStory[branchCounter - 1];
+            previousStoryText = branchOneStory[branch1Counter - 1];
             //previousLeftButtonText = leftButton[choiceCounter - 2];
             //previousRightButtontText = rightButton[choiceCounter - 2];
         }
 
-        if (branchCounter == 0)
+        if (branch1Counter == 0)
         {
             previousStoryText = mainStory[counter];
+        }
+
+        if (CheckForImageSwitch(line) == true)
+        {
+            line = line.TrimStart("@");
+            images.NextImage();
         }
 
         if (CheckIfEndOfBranch(line) == true)
         {
             line = line.TrimStart(";;");
             storyText.text = line;
-            branchCounter++;
+            branch1Counter++;
             isFromMainStory = true;
             //onSwitchToMainText.Invoke();
             //go back to main story
@@ -321,7 +387,7 @@ public class Dialogue : MonoBehaviour
         else
         {
             storyText.text = line;
-            branchCounter++;
+            branch1Counter++;
         }
         
         
@@ -339,25 +405,31 @@ public class Dialogue : MonoBehaviour
         images.NextImage();
         
         string line;
-        line = branchTwoStory[branchCounter];
+        line = branchTwoStory[branch2Counter];
         line = line.TrimStart("2");
-        if (branchCounter != 0)
+        if (branch2Counter != 0)
         {
-            previousStoryText = branchTwoStory[branchCounter - 1];
+            previousStoryText = branchTwoStory[branch2Counter - 1];
             //previousLeftButtonText = leftButton[choiceCounter - 2];
             //previousRightButtontText = rightButton[choiceCounter - 2];
         }
 
-        if (branchCounter == 0)
+        if (branch2Counter == 0)
         {
             previousStoryText = mainStory[counter];
+        }
+
+        if (CheckForImageSwitch(line) == true)
+        {
+            line = line.TrimStart("@");
+            images.NextImage();
         }
 
         if (CheckIfEndOfBranch(line) == true)
         {
             line = line.TrimStart(";;");
             storyText.text = line;
-            branchCounter++;
+            branch2Counter++;
             isFromMainStory = true;
             //onSwitchToMainText.Invoke();
             //go back to main story
@@ -365,12 +437,22 @@ public class Dialogue : MonoBehaviour
         else
         {
             storyText.text = line;
-            branchCounter++;
+            branch2Counter++;
         }
         
         
 
 
+    }
+
+    public bool CheckForImageSwitch(string line)
+    {
+        if (line.StartsWith("@"))
+        {
+            return true;
+        }
+
+        return false;
     }
     
 
@@ -420,4 +502,3 @@ public class Dialogue : MonoBehaviour
     }
     
 }
-
