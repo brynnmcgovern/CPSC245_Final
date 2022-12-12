@@ -1120,6 +1120,42 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1954969677}
+        m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
+        m_MethodName: CheckIfRightButtonWasClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1954969677}
+        m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
+        m_MethodName: syncBranchCounters
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1954969677}
+        m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
+        m_MethodName: StopTimer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &652867464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1348,6 +1384,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1954969676}
+        m_TargetAssemblyTypeName: Images, Assembly-CSharp
+        m_MethodName: SetImage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &742452322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1470,6 +1518,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 1954969677}
+        m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
+        m_MethodName: StopTimer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1954969677}
         m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
         m_MethodName: GoBack
@@ -2352,7 +2412,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1043950424
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2653,7 +2713,43 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1954969677}
         m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
+        m_MethodName: CheckIfLeftButtonWasClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1954969677}
+        m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
         m_MethodName: switchBranchOneText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1954969677}
+        m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
+        m_MethodName: syncBranchCounters
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1954969677}
+        m_TargetAssemblyTypeName: Dialogue, Assembly-CSharp
+        m_MethodName: StopTimer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2941,10 +3037,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textFile: {fileID: 4900000, guid: 663df97bf3b2d034a9de50135beaf4a1, type: 3}
+  currentLine: 
   storyText: {fileID: 1564605647}
   rightButtonText: {fileID: 910654910}
   leftButtonText: {fileID: 1699131012}
   timerText: {fileID: 870915599}
+  isChoice: 0
+  isImageSwitch: 0
   nextButton: {fileID: 1953629730}
   backButton: {fileID: 2035629609}
   leftButton: {fileID: 37179668}
@@ -2994,6 +3093,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cd169fdb0004a564b9db2f7d702b452e, type: 3}
   - {fileID: 21300000, guid: cd169fdb0004a564b9db2f7d702b452e, type: 3}
   imageController: {fileID: 1795544258}
+  dialogue: {fileID: 0}
+  previousImageCounter: 0
 --- !u!114 &1329408120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4235,7 +4336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1954969673
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4316,35 +4417,17 @@ MonoBehaviour:
   images:
   - {fileID: 21300000, guid: 571b88878f57eec4eb5ce2e2dc3c64e8, type: 3}
   - {fileID: 21300000, guid: 81c96b8b329ec7d43bb340d788589a3e, type: 3}
-  - {fileID: 21300000, guid: 81c96b8b329ec7d43bb340d788589a3e, type: 3}
-  - {fileID: 21300000, guid: 81c96b8b329ec7d43bb340d788589a3e, type: 3}
-  - {fileID: 21300000, guid: 472fc3d780c30224cb2cbf2fc4c8d9e5, type: 3}
-  - {fileID: 21300000, guid: 472fc3d780c30224cb2cbf2fc4c8d9e5, type: 3}
-  - {fileID: 21300000, guid: 472fc3d780c30224cb2cbf2fc4c8d9e5, type: 3}
-  - {fileID: 21300000, guid: 472fc3d780c30224cb2cbf2fc4c8d9e5, type: 3}
-  - {fileID: 21300000, guid: 472fc3d780c30224cb2cbf2fc4c8d9e5, type: 3}
-  - {fileID: 21300000, guid: 472fc3d780c30224cb2cbf2fc4c8d9e5, type: 3}
-  - {fileID: 21300000, guid: 472fc3d780c30224cb2cbf2fc4c8d9e5, type: 3}
   - {fileID: 21300000, guid: 472fc3d780c30224cb2cbf2fc4c8d9e5, type: 3}
   - {fileID: 21300000, guid: 6645c0673bdf53947b36a92bbb98fa33, type: 3}
-  - {fileID: 21300000, guid: 6645c0673bdf53947b36a92bbb98fa33, type: 3}
-  - {fileID: 21300000, guid: 6164f86c0d0ba244d8dd506b13fd3b09, type: 3}
-  - {fileID: 21300000, guid: 6164f86c0d0ba244d8dd506b13fd3b09, type: 3}
-  - {fileID: 21300000, guid: 6164f86c0d0ba244d8dd506b13fd3b09, type: 3}
-  - {fileID: 21300000, guid: 6164f86c0d0ba244d8dd506b13fd3b09, type: 3}
   - {fileID: 21300000, guid: 6164f86c0d0ba244d8dd506b13fd3b09, type: 3}
   - {fileID: 21300000, guid: 45ae2793338356046be793ca74dacaff, type: 3}
   - {fileID: 21300000, guid: e346b29c3e7d362428eec2ae91b2ab75, type: 3}
-  - {fileID: 21300000, guid: e346b29c3e7d362428eec2ae91b2ab75, type: 3}
-  - {fileID: 21300000, guid: e346b29c3e7d362428eec2ae91b2ab75, type: 3}
-  - {fileID: 21300000, guid: e346b29c3e7d362428eec2ae91b2ab75, type: 3}
-  - {fileID: 21300000, guid: e346b29c3e7d362428eec2ae91b2ab75, type: 3}
   - {fileID: 21300000, guid: 63f37e8f8c55b6f40bbb09afc31ce8e0, type: 3}
-  - {fileID: 21300000, guid: e346b29c3e7d362428eec2ae91b2ab75, type: 3}
   - {fileID: 21300000, guid: c210ef76c10e75345819ddc04207ae3c, type: 3}
   - {fileID: 21300000, guid: cd169fdb0004a564b9db2f7d702b452e, type: 3}
-  - {fileID: 21300000, guid: cd169fdb0004a564b9db2f7d702b452e, type: 3}
   imageController: {fileID: 69909473}
+  dialogue: {fileID: 1954969677}
+  previousImageCounter: 0
 --- !u!114 &1954969677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4358,10 +4441,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textFile: {fileID: 4900000, guid: 663df97bf3b2d034a9de50135beaf4a1, type: 3}
+  currentLine: 
   storyText: {fileID: 1863400132}
   rightButtonText: {fileID: 2047251432}
   leftButtonText: {fileID: 1231524253}
   timerText: {fileID: 234106920}
+  isChoice: 0
+  isImageSwitch: 0
   nextButton: {fileID: 742452319}
   backButton: {fileID: 805967996}
   leftButton: {fileID: 1272208679}

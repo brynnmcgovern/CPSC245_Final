@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class Images : MonoBehaviour
 {
     public Sprite[] images;
-    private int counter = 0;
+    private int counter = -1;
     public Image imageController;
-    private Sprite previousImage;
+    public Dialogue dialogue;
+    public int previousImageCounter = -1;
 
     
     // Start is called before the first frame update
@@ -18,20 +19,37 @@ public class Images : MonoBehaviour
         
     }
 
-    public void NextImage()
+    public void SetImage()
     {
         imageController.sprite = images[counter];
-        if (counter != 0)
-        {
-            previousImage = images[counter - 1];
-        }
+    }
+
+    public void NextImage()
+    {
         
-        counter++;
-        
+        if (counter <= images.Length)
+            counter++;
+        imageController.sprite = images[counter];
+        print(counter);
     }
 
     public void GoBack()
     {
-        imageController.sprite = previousImage;
+        if (dialogue.currentLine.Contains("@"))
+        {
+            counter -= 1;
+        }
+        imageController.sprite = images[counter];
+        print(counter);
+    }
+    public void DoubleBack()
+    {
+        counter -= 1;
+        if (dialogue.currentLine.Contains("@"))
+        {
+            counter -= 1;
+        }
+        imageController.sprite = images[counter];
+        print(counter);
     }
 }
