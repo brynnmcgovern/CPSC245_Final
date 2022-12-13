@@ -30,7 +30,7 @@ public class Images : MonoBehaviour
     {
         if (counter < images.Length)
             counter++;
-        //decreases the index to show the image(avoiding IndexOuTOfRange error)
+        //decreases the index to show the image(avoiding IndexOutOfRange error)
         //but increases it again for accuracy if the player chooses to go back 
         if (counter >= images.Length)
         {

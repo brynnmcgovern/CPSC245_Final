@@ -13,7 +13,6 @@ using UnityEngine;
 using System.IO;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Dialogue : MonoBehaviour
@@ -37,10 +36,10 @@ public class Dialogue : MonoBehaviour
     //A string to keep track of the currently visible line of text from the story
     [HideInInspector]public string currentLine;
     
-    //A list for the main story, a list for containing the choices and branches before they are split into smaller lists, 
+    //A list for containing the lines of the text file before they are split into smaller lists, a list for the main story,
     //and lists for the branches and choices once they are separated
-    private List<string> mainStory = new List<string>();
     private List<string> temp = new List<string>();
+    private List<string> mainStory = new List<string>();
     private List<string> branchOneStory = new List<string>();
     private List<string> leftButtonList = new List<string>();
     private List<string> branchTwoStory = new List<string>();
@@ -83,8 +82,8 @@ public class Dialogue : MonoBehaviour
     {
         images = GetComponent<Images>();
         CreateListOfLines(textFile, temp);
-        backButton.SetActive(false);
-        nextButton.SetActive(true);
+        HideBackButton();
+        ShowNextButton();
         HideChoiceButtons();
         storyText.enabled = false;
         timerText.enabled = false;
@@ -171,7 +170,7 @@ public class Dialogue : MonoBehaviour
         //if the current line is a choice, undoes the setup for the choice prompt (hides choices, shows next button, sets back choice index)
         if (isChoice)
         {
-            nextButton.SetActive(true);
+            ShowNextButton();
             HideChoiceButtons();
             choiceCounter--;
         }
@@ -219,19 +218,18 @@ public class Dialogue : MonoBehaviour
                 images.GoBack();
                 break;
         }
-       
-        backButton.SetActive(false);
+        HideBackButton();
     }
     
     //Handles parsing and displaying a line of the main story text. Also saves a reference to the line before it
     public void switchMainStoryText()
     {
-        nextButton.SetActive(true);
+        ShowNextButton();
         string line = mainStory[counter];
         currentLine = line;
         if (counter != 0)
         {   
-            backButton.SetActive(true);
+            ShowBackButton();
             //checks to see if the previous line displayed is the same as the previous line stored in the main story list and sets it if true.
             //if false, it is from the branch, and the previous text is set as the visible text on screen
             //setting the previous text directly from the list saves the prompts (*, &, @, etc) and is useful for when the back button is used
@@ -253,7 +251,7 @@ public class Dialogue : MonoBehaviour
         isFromMainStory = false;
         isChoice = false;
         HideChoiceButtons();
-        nextButton.SetActive(true);
+        ShowNextButton();
 
         string line;
         line = branchOneStory[branch1Counter];
@@ -261,7 +259,10 @@ public class Dialogue : MonoBehaviour
         if (branch1Counter != 0)
         {
             if (branchOneStory[branch1Counter - 1].Contains(storyText.text))
+            {
+                HideBackButton();
                 previousStoryText = branchOneStory[branch1Counter - 1];
+            }
             else
             {
                 previousStoryText = mainStory[counter-1];
@@ -283,7 +284,7 @@ public class Dialogue : MonoBehaviour
         isFromMainStory = false;
         isChoice = false;
         HideChoiceButtons();
-        nextButton.SetActive(true);
+        ShowNextButton();
 
         string line;
         line = branchTwoStory[branch2Counter];
@@ -291,7 +292,10 @@ public class Dialogue : MonoBehaviour
         if (branch2Counter != 0)
         {
             if (branchTwoStory[branch2Counter - 1].Contains(storyText.text))
+            {
                 previousStoryText = branchTwoStory[branch2Counter - 1];
+                HideBackButton();
+            }
             else
             {
                 previousStoryText = mainStory[counter-1];
@@ -327,9 +331,7 @@ public class Dialogue : MonoBehaviour
 
         if (CheckForChoice(line) == true)
         {
-            //set buttons active
-            //hide next button
-            nextButton.SetActive(false);
+            HideNextButton();
             ShowChoiceButtons();
             if (choiceCounter >= 0 && choiceCounter < leftButtonList.Count)
             {
@@ -409,8 +411,8 @@ public class Dialogue : MonoBehaviour
     {
         if (counter == maxLines)
         {
-            nextButton.SetActive(false);
-            backButton.SetActive(false);
+            HideNextButton();
+            HideBackButton();
         }
     }
     
@@ -458,12 +460,9 @@ public class Dialogue : MonoBehaviour
         return false;
     }
     
-    //starts the timer for the timed choice. 
-    //check if a choice button has been pressed 
-    //if it hasn't then continue countdown
-    //if it has then stop countdown
-    //check at end if a button has been pressed
-    //if not automatically select the left button 
+    //starts the timer for the timed choice and checks if a choice button has been pressed 
+    //if it hasn't then continue countdown, if it has then stop countdown
+    //check at end if a button has been pressed, if not automatically select the left button 
     private IEnumerator Countdown()
     {
         rightButtonClicked = false;
@@ -504,19 +503,15 @@ public class Dialogue : MonoBehaviour
         timerText.enabled = false;
         seconds = 3;
     }
-    
-    //shows the choice buttons by enabling them
-    private void ShowChoiceButtons()
-    {
-        leftButton.SetActive(true);
-        rightButton.SetActive(true);
-    }
 
-    //Hides the choice buttons by disabling them
-    private void HideChoiceButtons()
+    //gets a file as a string, separates that string into a list of lines, then separates that lists into smaller lists.
+    private void CreateListOfLines(TextAsset file, List<string> list)
     {
-        leftButton.SetActive(false);
-        rightButton.SetActive(false);
+        string line = GetTextFileAsLines(file);
+        SeparateStringIntoLines(list, line);
+        maxLines = temp.Count;
+        SeparateLists();
+        maxLines = mainStory.Count;
     }
     
     //converts the text file to a string
@@ -544,17 +539,7 @@ public class Dialogue : MonoBehaviour
         }
         stringReader.Close();
     }
-    
-    //gets a file as a string, separates that string into a list of lines, then separates that lists into smaller lists.
-    private void CreateListOfLines(TextAsset file, List<string> list)
-    {
-        string line = GetTextFileAsLines(file);
-        SeparateStringIntoLines(list, line);
-        maxLines = temp.Count;
-        SeparateLists();
-        maxLines = mainStory.Count;
-    }
-    
+
     //separates list into smaller lists using symbols and numbers as indicators of whether they are branches or choices or part of the main story
     private void SeparateLists()
     {
@@ -592,5 +577,43 @@ public class Dialogue : MonoBehaviour
                 mainStory.Add(tempLine);
             }
         }
+    }
+    
+    //shows the choice buttons by enabling them
+    private void ShowChoiceButtons()
+    {
+        leftButton.SetActive(true);
+        rightButton.SetActive(true);
+    }
+
+    //Hides the choice buttons by disabling them
+    private void HideChoiceButtons()
+    {
+        leftButton.SetActive(false);
+        rightButton.SetActive(false);
+    }
+    
+    //hides the back button by disabling it
+    private void HideBackButton()
+    {
+        backButton.SetActive(false);
+    }
+    
+    //shows the back button by enabling it
+    private void ShowBackButton()
+    {
+        backButton.SetActive(true);
+    }
+
+    //hides the next button by disabling it
+    private void HideNextButton()
+    {
+        nextButton.SetActive(false);
+    }
+    
+    //shows the next button by enabling it
+    private void ShowNextButton()
+    {
+        nextButton.SetActive(true);
     }
 }

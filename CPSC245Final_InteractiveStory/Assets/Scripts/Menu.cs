@@ -7,6 +7,7 @@
  * 2. Menu class contains functions for showing the menu and accessing the stories
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
