@@ -1,3 +1,12 @@
+/*
+ * 1. Brynn McGovern and Charity Griffin
+ *    2370579 and 2376898
+ *    bmcgovern@chapman.edu and chagriffin@chapman.edu
+ *    CPSC 245
+ *    Final Project
+ * 2. Dialogue class contains functions for tracking, organizing, and showing dialogue
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,75 +18,87 @@ using UnityEngine.UI;
 
 public class Dialogue : MonoBehaviour
 {
+    //The text file containing the full text of the story
     public TextAsset textFile;
+    
+    //Text objects to show the story,the choice buttons, and the timer for timed choices
+    public TextMeshProUGUI storyText;
+    public TextMeshProUGUI leftButtonText;
+    public TextMeshProUGUI rightButtonText;
+    public TextMeshProUGUI timerText;
+    
+    //Game Objects for the the next and back buttons, the choice buttons, and the outline for the left choice button
+    public GameObject nextButton;
+    public GameObject backButton;
+    public GameObject leftButton;
+    public GameObject rightButton;
+    public Outline leftOutline;
+    
+    //A string to keep track of the currently visible line of text from the story
+    [HideInInspector]public string currentLine;
+    
+    //A list for the main story, a list for containing the choices and branches before they are split into smaller lists, 
+    //and lists for the branches and choices once they are separated
     private List<string> mainStory = new List<string>();
     private List<string> temp = new List<string>();
     private List<string> branchOneStory = new List<string>();
     private List<string> leftButtonList = new List<string>();
     private List<string> branchTwoStory = new List<string>();
     private List<string> rightButtonList = new List<string>();
+    
+    //Strings for tracking previous text to go back to
     private string previousStoryText;
-    private string previousRightButtontText;
+    private string previousRightButtonText;
     private string previousLeftButtonText;
+    
+    //Integers for tracking previous list indexes, current indexes, the max number of lines in the story,
+    //Which branch is being accessed, and how many seconds long the timed choice should be
     private int previousBranch1Counter;
     private int previousBranch2Counter;
-    public string currentLine;
-    
-
-    public TextMeshProUGUI storyText;
-    public TextMeshProUGUI rightButtonText;
-    public TextMeshProUGUI leftButtonText;
-    public TextMeshProUGUI timerText;
-
     private int counter = 0;
     private int branch1Counter = 0;
     private int branch2Counter = 0;
-    private int maxLines;
     private int choiceCounter = 0;
-    private bool endOfBranch;
+    private int maxLines;
+    private int branchNum;
     private int seconds = 3;
+    
+    //booleans for checking for the end of a branch, whether a choice button has been clicked,
+    //and if the current text is a choice prompt or if it is from the main story
+    private bool endOfBranch;
     private bool rightButtonClicked;
     private bool leftButtonClicked;
-    public bool isChoice = false;
-    public bool isImageSwitch = false;
-    
-    public GameObject nextButton;
-    public GameObject backButton;
-    public GameObject leftButton;
-    public GameObject rightButton;
-    public Outline leftOutline;
+    private bool isChoice = false;
     private bool isFromMainStory = true;
-    private int branchNum;
-
-
+    
+    //A reference to the images class
     private Images images;
     
     //to signal an image change, place @ symbol at front of line, before *, &, //, 
     // and ;;. But put it after #1 and ::1 (the symbols and numbers for choices and branches)
 
-    // Start is called before the first frame update
-    void Start()
+    //Hides the choice and back buttons, the timer text and the outline on the left button, and shows the next button.
+    //Also parses the text file to create two lists of lines
+    private void Start()
     {
+        images = GetComponent<Images>();
         CreateListOfLines(textFile, temp);
         backButton.SetActive(false);
         nextButton.SetActive(true);
-        leftButton.SetActive(false);
-        rightButton.SetActive(false);
+        HideChoiceButtons();
         storyText.enabled = false;
-        images = GetComponent<Images>();
         timerText.enabled = false;
         leftOutline.enabled = false;
-
-        //hide choice buttons
-        //set active next button
-
     }
-    
-    public void syncBranchCounters()
+
+    //After one branch has been chosen, this method iterates through the other branch until it finds the end of it (signified by ";;")
+    //So that the lines of the branches do not desync while one is being played through
+    public void SyncBranchCounters()
     {
         string temp;
         if (branchNum == 2)
         {
+            //saves the current index before iterating through the branch so that it can be referenced later
             previousBranch1Counter = branch1Counter;
             temp = branchOneStory[branch1Counter];
             while (!temp.Contains(";;"))
@@ -88,10 +109,7 @@ public class Dialogue : MonoBehaviour
                 {
                     break;
                 }
-                //stop
             }
-            //search thru branch2 list for ;;
-            //increment branch2Counter
         }
         
         else if (branchNum == 1)
@@ -106,14 +124,12 @@ public class Dialogue : MonoBehaviour
                 {
                     break;
                 }
-                //stop
             }
-            //search thru branch1 list for ;;
-            //increment branch1Counter
         }
     }
     
-    public void SyncBranchCountersBackward()
+    //uses the previously saved index to keep branches synced as they are set back to what they were before
+    private void SyncBranchCountersBackward()
     {
         if (branchNum == 2)
         {
@@ -126,25 +142,7 @@ public class Dialogue : MonoBehaviour
         }
     }
     
-    
-    public void CheckIfRightButtonWasClicked()
-    {
-        rightButtonClicked = true;
-    }
-
-    public void CheckIfLeftButtonWasClicked()
-    {
-        leftButtonClicked = true;
-    }
-
-    public void StopTimer()
-    {
-        StopCoroutine("Countdown");
-        leftOutline.enabled = false;
-        timerText.enabled = false;
-        seconds = 3;
-    }
-
+    //Called with the Next button. Displays the story text and checks if it should be from the main story or one of the branches.
     public void Play()
     {
         storyText.enabled = true;
@@ -157,7 +155,7 @@ public class Dialogue : MonoBehaviour
         {
             if (branchNum == 1)
             {
-                switchBranchOneText();
+                SwitchBranchOneText();
             }
 
             if (branchNum == 2)
@@ -166,21 +164,25 @@ public class Dialogue : MonoBehaviour
             }
         }
     }
-
+    
+    //Called with the Back Button. Resets dialogue, buttons, and images to set the story back to the previous line
     public void GoBack()
     {
+        //if the current line is a choice, undoes the setup for the choice prompt (hides choices, shows next button, sets back choice index)
         if (isChoice)
         {
             nextButton.SetActive(true);
-            leftButton.SetActive(false);
-            rightButton.SetActive(false);
+            HideChoiceButtons();
             choiceCounter--;
         }
+        //if current line is from the main story, parses through the previous line of text to display it
         if (isFromMainStory == true)
         {
+            //counter must be subtracted by two to properly be set back because it will be incremented during the parsing of the previous line
             counter -= 2;
             ParseText(previousStoryText, "MainStory");
         }
+        //if the current line is from one of the branches, parses through the corresponding previous line of text to display it
         else
         {
             if (branchNum == 1)
@@ -195,7 +197,9 @@ public class Dialogue : MonoBehaviour
                 ParseText(previousStoryText, "BranchTwo");
             }
         }
-
+        
+        //Displaying the previous line may have triggered an old choice prompt. This is checked by seeing if there is now a choice button active.
+        //If so, the buttons and corresponding branches are set back to sync with the prompt
         if (leftButton.activeSelf)
         {
             choiceCounter -= 1;
@@ -203,7 +207,9 @@ public class Dialogue : MonoBehaviour
             rightButtonText.text = rightButtonList[choiceCounter-1];
             SyncBranchCountersBackward();
         }
-
+        
+        //Checks to see if the previous line had a prompt for an image switch.
+        //If false, it calls GoBack() in the images class. If true, it will need to be set back farther to compensate, calling DoubleBack() instead.
         switch (CheckForImageSwitch(previousStoryText))
         {
             case true:
@@ -216,8 +222,92 @@ public class Dialogue : MonoBehaviour
        
         backButton.SetActive(false);
     }
+    
+    //Handles parsing and displaying a line of the main story text. Also saves a reference to the line before it
+    public void switchMainStoryText()
+    {
+        nextButton.SetActive(true);
+        string line = mainStory[counter];
+        currentLine = line;
+        if (counter != 0)
+        {   
+            backButton.SetActive(true);
+            //checks to see if the previous line displayed is the same as the previous line stored in the main story list and sets it if true.
+            //if false, it is from the branch, and the previous text is set as the visible text on screen
+            //setting the previous text directly from the list saves the prompts (*, &, @, etc) and is useful for when the back button is used
+            if (mainStory[counter - 1].Contains(storyText.text))
+                previousStoryText = mainStory[counter - 1];
+            else
+            {
+                previousStoryText = storyText.text;
+            }
+        }
+        ParseText(line, "MainStory");
+    }
 
-    private void ParseText(string line, string whichstory)
+    //on leftButtonClick
+    //once the left choice button is clicked, switches story text with text from this branch.
+    public void SwitchBranchOneText()
+    {
+        branchNum = 1;
+        isFromMainStory = false;
+        isChoice = false;
+        HideChoiceButtons();
+        nextButton.SetActive(true);
+
+        string line;
+        line = branchOneStory[branch1Counter];
+        currentLine = line;
+        if (branch1Counter != 0)
+        {
+            if (branchOneStory[branch1Counter - 1].Contains(storyText.text))
+                previousStoryText = branchOneStory[branch1Counter - 1];
+            else
+            {
+                previousStoryText = mainStory[counter-1];
+            }
+        }
+
+        if (branch1Counter == 0)
+        {
+            previousStoryText = mainStory[counter-1];
+        }
+        ParseText(line, "BranchOne");
+    }
+    
+    //Called with Right Choice Button. Once the left button is clicked, it switches from main story text to the text of this branch.
+    //The next button (aka Play()) will pull text from this branch until it ends and needs to switch back to the main story
+    public void switchBranchTwoText()
+    {
+        branchNum = 2;
+        isFromMainStory = false;
+        isChoice = false;
+        HideChoiceButtons();
+        nextButton.SetActive(true);
+
+        string line;
+        line = branchTwoStory[branch2Counter];
+        currentLine = line;
+        if (branch2Counter != 0)
+        {
+            if (branchTwoStory[branch2Counter - 1].Contains(storyText.text))
+                previousStoryText = branchTwoStory[branch2Counter - 1];
+            else
+            {
+                previousStoryText = mainStory[counter-1];
+            }
+        }
+
+        if (branch2Counter == 0)
+        {
+            previousStoryText = mainStory[counter-1];
+        }
+        ParseText(line, "BranchTwo");
+    }
+    
+    //Parses through the text, checking for all possible prompts/indicators in a line and trimming them
+    //Once the line has been parsed, the index of the list it came from is incremented so the next line can be properly parsed
+     private void ParseText(string line, string whichstory)
     {
         line = line.TrimStart("1");
         line = line.TrimStart("2");
@@ -226,7 +316,9 @@ public class Dialogue : MonoBehaviour
             line = line.TrimStart("@");
             images.NextImage();
         }
-
+        
+        //the name indicators surround the name so that it can be separated from the rest of the text
+        //rather than just indicating it at the beginning of the line
         if (line.StartsWith("//"))
         {
             string[] namedDialogue = line.Split("//");
@@ -237,10 +329,8 @@ public class Dialogue : MonoBehaviour
         {
             //set buttons active
             //hide next button
-            
             nextButton.SetActive(false);
-            leftButton.SetActive(true);
-            rightButton.SetActive(true);
+            ShowChoiceButtons();
             if (choiceCounter >= 0 && choiceCounter < leftButtonList.Count)
             {
                 leftButtonText.text = leftButtonList[choiceCounter];
@@ -292,83 +382,29 @@ public class Dialogue : MonoBehaviour
             }
         }
     }
-
-    public void switchMainStoryText()
+    
+     //Called when the right choice button is clicked
+    public void CheckIfRightButtonWasClicked()
     {
-        nextButton.SetActive(true);
-        string line = mainStory[counter];
-        currentLine = line;
-        if (counter != 0)
-        {   
-            backButton.SetActive(true);
-            if (mainStory[counter - 1].Contains(storyText.text))
-                previousStoryText = mainStory[counter - 1];
-            else
-            {
-                previousStoryText = storyText.text;
-            }
-        }
-        ParseText(line, "MainStory");
+        rightButtonClicked = true;
     }
 
-    //on leftButtonClick
-    //once button is clicked switch story text with text from this branch
-    public void switchBranchOneText()
+    //Called when the left button is clicked
+    public void CheckIfLeftButtonWasClicked()
     {
-        branchNum = 1;
-        isFromMainStory = false;
-        isChoice = false;
-        leftButton.SetActive(false);
-        rightButton.SetActive(false);
-        nextButton.SetActive(true);
-
-        string line;
-        line = branchOneStory[branch1Counter];
-        currentLine = line;
-        if (branch1Counter != 0)
-        {
-            if (branchOneStory[branch1Counter - 1].Contains(storyText.text))
-                previousStoryText = branchOneStory[branch1Counter - 1];
-            else
-            {
-                previousStoryText = mainStory[counter-1];
-            }
-        }
-
-        if (branch1Counter == 0)
-        {
-            previousStoryText = mainStory[counter-1];
-        }
-        ParseText(line, "BranchOne");
+        leftButtonClicked = true;
     }
-    public void switchBranchTwoText()
+    
+    //stops the coroutine for the timed choice, hides the outline of the choice that would have been auto-selected, and resets the timer
+    public void StopTimer()
     {
-        branchNum = 2;
-        isFromMainStory = false;
-        isChoice = false;
-        leftButton.SetActive(false);
-        rightButton.SetActive(false);
-        nextButton.SetActive(true);
-
-        string line;
-        line = branchTwoStory[branch2Counter];
-        currentLine = line;
-        if (branch2Counter != 0)
-        {
-            if (branchTwoStory[branch2Counter - 1].Contains(storyText.text))
-                previousStoryText = branchTwoStory[branch2Counter - 1];
-            else
-            {
-                previousStoryText = mainStory[counter-1];
-            }
-        }
-
-        if (branch2Counter == 0)
-        {
-            previousStoryText = mainStory[counter-1];
-        }
-        ParseText(line, "BranchTwo");
+        StopCoroutine("Countdown");
+        leftOutline.enabled = false;
+        ResetTimer();
     }
+    
+    
+    //hides the back and next buttons once the last line of the story has been reached
     private void CheckForEndOfStory()
     {
         if (counter == maxLines)
@@ -378,17 +414,18 @@ public class Dialogue : MonoBehaviour
         }
     }
     
+    //checks the start of the line for the indicator to change the image
     private bool CheckForImageSwitch(string line)
     {
         if (line.StartsWith("@"))
         {
-            isImageSwitch = true;
             return true;
         }
-        isImageSwitch = false;
         return false;
     }
-
+    
+    
+    //checks the start of the line for the indicator of the last line of the branch
     private bool CheckIfEndOfBranch(string line)
     {
         if (line.Contains(";;"))
@@ -397,7 +434,8 @@ public class Dialogue : MonoBehaviour
         }
         return false;
     }
-
+    
+    //checks the start of the line for the indicator for a choice prompt
     private bool CheckForChoice(string line)
     {
         if (line.StartsWith("*"))
@@ -409,6 +447,7 @@ public class Dialogue : MonoBehaviour
         return false;
     }
     
+    //checks the start of the line for the indicator for a timed choice
     private bool CheckForTimedChoice(string line)
     {
         if (line.StartsWith("&"))
@@ -419,6 +458,12 @@ public class Dialogue : MonoBehaviour
         return false;
     }
     
+    //starts the timer for the timed choice. 
+    //check if a choice button has been pressed 
+    //if it hasn't then continue countdown
+    //if it has then stop countdown
+    //check at end if a button has been pressed
+    //if not automatically select the left button 
     private IEnumerator Countdown()
     {
         rightButtonClicked = false;
@@ -432,43 +477,58 @@ public class Dialogue : MonoBehaviour
 
             if (rightButtonClicked == true)
             {
-                timerText.enabled = false;
-                seconds = 3;
+                ResetTimer();
                 yield break;
             }
             else if (leftButtonClicked == true)
             {
-                timerText.enabled = false;
-                seconds = 3;
+                ResetTimer();
                 yield break;
             }
-            //check if a choice button has been pressed 
-            //if it hasn't then continue countdown
-            //if it has then stop countdown
-            //check at end if a button has been pressed
-            //if not automatically select the left button 
         }
 
         if (seconds == 0)
         {
-            timerText.enabled = false;
             leftOutline.enabled = true;
-            seconds = 3;
+            ResetTimer();
             yield return new WaitForSeconds(1f);
-            
-            switchBranchOneText();
+            SwitchBranchOneText();
+            SyncBranchCounters();
+            leftOutline.enabled = false;
         }
     }
+    
+    //resets the timer by hiding it and setting the number of seconds back to 3 
+    private void ResetTimer()
+    {
+        timerText.enabled = false;
+        seconds = 3;
+    }
+    
+    //shows the choice buttons by enabling them
+    private void ShowChoiceButtons()
+    {
+        leftButton.SetActive(true);
+        rightButton.SetActive(true);
+    }
 
+    //Hides the choice buttons by disabling them
+    private void HideChoiceButtons()
+    {
+        leftButton.SetActive(false);
+        rightButton.SetActive(false);
+    }
+    
+    //converts the text file to a string
     private string GetTextFileAsLines(TextAsset file)
     {
         string line = file.ToString();
         return line;
     }
-
+    
+    //separates the string into a list of a lines via the StringReader class
     private void SeparateStringIntoLines(List<string> list, string line)
     {
-        
         StringReader stringReader = new StringReader(line);
         while (true)
         {
@@ -485,6 +545,7 @@ public class Dialogue : MonoBehaviour
         stringReader.Close();
     }
     
+    //gets a file as a string, separates that string into a list of lines, then separates that lists into smaller lists.
     private void CreateListOfLines(TextAsset file, List<string> list)
     {
         string line = GetTextFileAsLines(file);
@@ -494,6 +555,7 @@ public class Dialogue : MonoBehaviour
         maxLines = mainStory.Count;
     }
     
+    //separates list into smaller lists using symbols and numbers as indicators of whether they are branches or choices or part of the main story
     private void SeparateLists()
     {
         string line;

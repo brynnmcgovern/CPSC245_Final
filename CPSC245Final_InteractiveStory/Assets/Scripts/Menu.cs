@@ -1,3 +1,12 @@
+/*
+ * 1. Brynn McGovern and Charity Griffin
+ *    2370579 and 2376898
+ *    bmcgovern@chapman.edu and chagriffin@chapman.edu
+ *    CPSC 245
+ *    Final Project
+ * 2. Menu class contains functions for showing the menu and accessing the stories
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,14 +15,14 @@ using UnityEngine.UI;
 public class Menu : MonoBehaviour
 {
     public GameObject firstStoryPanel;
-
     public GameObject secondStoryPanel;
+   
     public GameObject menuPanel;
 
     public Outline firstStoryButton;
-
     public Outline secondStoryButton;
-    // Start is called before the first frame update
+
+    //Hides the stories and shows the menu on start
     void Start()
     {
         menuPanel.SetActive(true);
@@ -21,37 +30,23 @@ public class Menu : MonoBehaviour
         secondStoryPanel.SetActive(false);
     }
 
-    private void Awake()
-    {
-        //hide button outlines
-        firstStoryButton.enabled = false;
-        secondStoryButton.enabled = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //gets called when the first story button gets clicked. Show the corresponding story and hides all other panels
     public void FirstStory()
     {
         firstStoryPanel.SetActive(true);
         secondStoryPanel.SetActive(false);
         menuPanel.SetActive(false);
-        
-
-        //show button outline
-        //hide button outline
+        firstStoryButton.enabled = true;
+        secondStoryButton.enabled = false;
     }
-
+    
+    //gets called when the second story button gets clicked. Show the corresponding story and hides all other panels
     public void SecondStory()
     {
         firstStoryPanel.SetActive(false);
         secondStoryPanel.SetActive(true);
         menuPanel.SetActive(false);
-       
-        //show button outline
-        //hide button outline
+        firstStoryButton.enabled = false;
+        secondStoryButton.enabled = true;
     }
 }

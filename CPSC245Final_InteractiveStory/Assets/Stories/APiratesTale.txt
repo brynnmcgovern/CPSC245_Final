@@ -1,0 +1,37 @@
+@One day, you find yourself out on the ocean.
+@You are the captain of a humble crew. A pirate captain.
+*&What kind of captain are you?
+In any case, you and your crew have gotten quite used to the way things are.
+@And today is a day like any other.
+Well, it was supposed to be.
+@There's a storm brewing. It's close. Dark. Dangerous.
+*&What will you do?
+@And just like that, you're alone again, looking out at the darkening clouds. 
+@This storm is worse than anything you've seen in all your years on the open seas. 
+This may just be the most intense adventure of your entire swashbuckling career.
+@But we'll never get to know the result, since this story is just an example.
+Maybe you die. Maybe you find some treasure on the ocean floor or something. Who knows?
+The end. 
+::1A kind captain
+#1Despite your swashbuckling and skulduggery, you are a gentle soul.
+#1You always share the riches from the treasure you find (steal) equally among your men.
+#1;;You are well respected, but there are whispers that you may be too soft for the sea...
+::2A tough captain
+#2You are a pirate, through and through. Cold. Heartless. Violent. Strong.
+#2Struggling a bit with scurvy, but a bit of illness isn't enough to take you down.
+#2You are strict with your crew, and cruel with your enemies. You get the job done.
+#2Your men are rich, and you, of course, are richer. The lackeys can't complain of empty pockets.
+#2;;Though you do sometimes catch whispered complaints of their dislike of you.
+::1Confer with your crew
+#1@You turn to your first mate, beside you at the helm.
+#1//First Mate//It's not looking good, is it, Captain?
+#1//First Mate//I think I'll start telling the others to prepare for the worst.
+#1//First Mate//If that's alright with you, of course.
+#1;;You send your first mate on their way to prepare for the storm.
+::2Start giving orders
+#2You immediately turn and bark orders at the closest pirate.
+#2@//Pirate//Yes, Captain. I'll let the crew know to prepare right away.
+#2//Pirate//...Would it kill you to say please sometimes?
+#2You grab the hilt of your sword the second you hear their grumbled complaint.
+#2//Pirate//Nevermind, Captain! No thanks necessary. I'll be going now.
+#2;;The pirate runs off to prepare, grumbling all the while.
